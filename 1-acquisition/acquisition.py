@@ -11,6 +11,7 @@ from datetime import datetime
 from IPython.display import clear_output
 import random
 from numpy.random import default_rng
+import operator
 
 #==============================================
 # experiment parameters
@@ -38,8 +39,7 @@ print(f"Total experiment time = {'{:.2f}'.format(experiment_time/60)} Minute" )
 #==============================================
 # Configuration 
 #==============================================
-image_folder='./stimuli/Maths/LowStress'
-
+levels = ['LowStress', 'MildStress', 'HigherStress']
 
 #name, type, channel_count, sampling rate, channel format, source_id
 #info = StreamInfo('CytonMarkers', 'Markers', 1, 0.0, 'int32', 'CytonMarkerID')#make an outlet
@@ -52,6 +52,41 @@ stims = {
     '2': [2, 1, 3],
     '3': [3, 2, 1],
 }
+
+operators= {
+    '+': operator.add, 
+    '-': operator.sub,
+    'x': operator.mul,
+    '/': operator.truediv,
+}
+
+def drawStress(level):
+    operant1 = random.randint(0,9)
+    operant2 = random.randint(1,9)
+    operator1 = random.choice(list(operators.keys()))
+    #operator2 = random.choice(operators.keys())
+
+    if level == "low":
+        ans = operators[operator1](operant1, operant2)
+        if type(ans) == int and operator == "+" or "-" and 0 <= ans <=9:
+            message = visual.TextStim( mywin, text=f'{operant1} {operator1} {operant2}', languageStyle='LTR')
+            message.contrast =  0.3
+            message.height= 0.5
+            message.draw() # draw on screen
+            mywin.flip()   # refresh to show what we have draw      
+        else:
+            drawStress(level) 
+
+    if level == "mild" or "higher":
+        ans = operators[operator1](operant1, operant2)
+        if type(ans) == int and 0 <= ans <=9:
+            message = visual.TextStim( mywin, text=f'{operant1} {operator1} {operant2}', languageStyle='LTR')
+            message.contrast =  0.3
+            message.height= 0.5
+            message.draw() # draw on screen
+            mywin.flip()   # refresh to show what we have draw      
+        else:
+            drawStress(level)    
 
 def drawTextOnScreen(massage) :
     message = visual.TextStim( mywin, text=massage, languageStyle='LTR')
@@ -116,21 +151,24 @@ mywin = visual.Window([1366, 768], color='black', fullscr=False, screen=0, units
 drawTextOnScreen('Loading...')
 
 #Load stimuli to RAM
-rng = default_rng()
-fname = rng.choice(5, size=3, replace=False)
-fname = fname.astype(str).tolist()
-usefilefname = fname
-usefilefname.append('black')
+#rng = default_rng()
+#fname = rng.choice(5, size=3, replace=False)
+#fname = fname.astype(str).tolist()
+#usefilefname = fname
+#usefilefname.append('black')
 
-all_img = []
-for im in usefilefname:
-    imgPath=image_folder+"/"+str(im)+".png"
-    stim = visual.ImageStim( mywin,  image=imgPath )
-#     stim.size *= .7
-    if im == 'black':
-        blank = stim
-    else:
-        all_img.append(stim)
+#all_imgs = []
+#for image_folder in image_folders:
+#    all_img = []
+#    for im in usefilefname:
+#        imgPath=image_folder+"/"+str(im)+".png"
+#        stim = visual.ImageStim( mywin,  image=imgPath )
+#    #     stim.size *= .7
+#        if im == 'black':
+#            blank = stim
+#        else:
+#            all_img.append(stim)
+#    all_imgs.append(all_img)
 
 core.wait(3)
         
@@ -144,26 +182,27 @@ while True:
         start = time.time()
         drawTextOnScreen('') 
 
-        trial = 1
-        for img in stims[str(np.random.randint(1,3))]:
-            drawTextOnScreen(f'Trial {trial}/5')
+        for i,level in enumerate(levels):
+            drawTextOnScreen(f'Examples of {levels[i]}')
             core.wait(wait)
-            clear_output(wait=True)
-            drawFixation('trial break', trial_flixation_time-wait)
-            
-            #Perception
-            drawTrial(img-1, 'perception', stim_time)   # drawTrail(idx_mark, type_mark, stimTime)
-            drawFixation('task break', np.random.uniform(task_flixation_time[0], task_flixation_time[1]))
-            #Imagery
-            drawTrial(img-1, 'imagery', stim_time)
-
-            if trial == 5 :
-                break
-            trial += 1
+            for img in range(10):
+                drawStress(level)
+                #drawTextOnScreen(f'Trial {trial}/5')
+                core.wait(wait)
+                clear_output(wait=True)
+                drawFixation('trial break', trial_flixation_time-wait)
+                
+                #Perception
+                #drawTrial(int(img)-1, 'perception', stim_time)   # drawTrail(idx_mark, type_mark, stimTime)
+                drawTextOnScreen(f'ANSWER')
+                core.wait(wait)
+                drawFixation('task break', np.random.uniform(task_flixation_time[0], task_flixation_time[1]))
+                #Imagery
+                #drawTrial(int(img)-1, 'imagery', stim_time)
 
         drawTextOnScreen('End of training session')
         core.wait(1)
-        drawTextOnScreen('You can ask some question to instructor.\nNo? : space bar')
+        drawTextOnScreen('Press space bar to continue')
         _ = event.waitKeys()
         isTrianing = False
         break
