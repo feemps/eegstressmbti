@@ -185,6 +185,9 @@ def eegMarking(stampType, idx_mark=None, type_mark=None):   # use trial variable
 #trial_idx = input()
 
 wait = 1
+
+#5 mins
+timeout = 60*5
     
 # mywin = visual.Window([1366, 768], color='black', fullscr=True, screen=1, units='norm')     # set the screen and full screen mode
 # mywin = visual.Window([640, 360], color='black', fullscr=False, screen=0, units='norm')     # set the screen and full screen mode
@@ -192,8 +195,7 @@ mywin = visual.Window([1366, 768], color='black', fullscr=False, screen=0, units
 
 drawTextOnScreen('Loading...')
 core.wait(3)
-drawTextOnScreen('For each question\nYou have 5s to answer\n')  
-core.wait(3)      
+     
 ##############
 ####  Training session
 while True:
@@ -201,31 +203,32 @@ while True:
     drawTextOnScreen('Training session\nPlease wait\nPress space bar to start')
     keys = event.getKeys()
     if 'space' in keys:      # If space has been pushed
-        start = time.time()
         drawTextOnScreen('') 
-
         for i,level in enumerate(levels):
             drawTextOnScreen(f'Examples of {levels[i]}')
             core.wait(wait)
-            for img in range(10):
+            timeout_start = time.time()
+            #do for 5 mins
+            while time.time() < timeout_start + timeout:
                 #Questions
+                start_eachq = time.time()
                 corr_ans = drawMaths(level)
                 print(f"Correct answer: {corr_ans}")
-                core.wait(5)
-                clear_output(wait=True)
-                #drawFixation('trial break', trial_flixation_time-wait)
                 
                 #Answer
-                drawTextOnScreen(f'Type in your answer')
-                core.wait(5)
-                answers = event.getKeys()
+                #drawTextOnScreen(f'Type in your answer')
+                answers = event.waitKeys()
+                print(answers)
                 if len(answers) == 0:
                     drawTextOnScreen(f'Too slow')
                     core.wait(3)
                 else:
-                    drawTextOnScreen(f'Your answer was : {answers[0]}')
-                    core.wait(1)
+                    #drawTextOnScreen(f'Your answer was : {answers[0]}')
+                    #core.wait(1)
+                    stop_eachq  = time.time()
+                    print(f"You took {stop_eachq - start_eachq}s to answer")
                     drawAnswer(corr_ans, answers[0])
+                    #eegMarking(stop_eachq - start_eachq)
                     core.wait(3)
 
                 drawFixation('task break', np.random.uniform(task_flixation_time[0], task_flixation_time[1]))
