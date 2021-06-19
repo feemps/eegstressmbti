@@ -53,40 +53,89 @@ stims = {
     '3': [3, 2, 1],
 }
 
-operators= {
-    '+': operator.add, 
-    '-': operator.sub,
-    'x': operator.mul,
-    '/': operator.truediv,
-}
+operators_low = ['+', '-']
+operators_mild = ['+', '-', '*']
+operators_higher = ['+', '-', '*', '/']
 
-def drawStress(level):
-    operant1 = random.randint(0,9)
-    operant2 = random.randint(1,9)
-    operator1 = random.choice(list(operators.keys()))
-    #operator2 = random.choice(operators.keys())
-
-    if level == "low":
-        ans = operators[operator1](operant1, operant2)
-        if type(ans) == int and operator == "+" or "-" and 0 <= ans <=9:
-            message = visual.TextStim( mywin, text=f'{operant1} {operator1} {operant2}', languageStyle='LTR')
-            message.contrast =  0.3
-            message.height= 0.5
-            message.draw() # draw on screen
-            mywin.flip()   # refresh to show what we have draw      
-        else:
-            drawStress(level) 
-
-    if level == "mild" or "higher":
-        ans = operators[operator1](operant1, operant2)
+def drawMaths(level):
+    if level == "LowStress":
+        operant1 = random.randint(0,9)
+        operant2 = random.randint(0,9)
+        operant3 = random.randint(0,9)
+        operator1 = random.choice(operators_low)
+        operator2 = random.choice(operators_low)
+        print(operant1,operator1,operant2, operator2,operant3)
+        ans = eval(f'{operant1}{operator1}{operant2}{operator2}{operant3}')
         if type(ans) == int and 0 <= ans <=9:
-            message = visual.TextStim( mywin, text=f'{operant1} {operator1} {operant2}', languageStyle='LTR')
+            print(ans)
+            message = visual.TextStim( mywin, text=f'{operant1} {operator1} {operant2} {operator2} {operant3}', languageStyle='LTR')
             message.contrast =  0.3
-            message.height= 0.5
+            message.height= 0.3
             message.draw() # draw on screen
-            mywin.flip()   # refresh to show what we have draw      
-        else:
-            drawStress(level)    
+            mywin.flip()   # refresh to show what we have draw
+            #eegMarking()
+            return ans      
+        else: 
+            drawMaths(level)
+
+    if level == "MildStress":
+        operant1 = random.randint(0,99)
+        operant2 = random.randint(0,99)
+        operant3 = random.randint(0,99)
+        operator1 = random.choice(operators_mild)
+        operator2 = random.choice(operators_mild)
+        #print(operant1,operator1,operant2, operator2,operant3)
+        ans = eval(f'{operant1}{operator1}{operant2}{operator2}{operant3}')
+        if type(ans) == int and 0 <= ans <=9:
+            #print(ans)
+            message = visual.TextStim( mywin, text=f'{operant1} {operator1} {operant2} {operator2} {operant3}', languageStyle='LTR')
+            message.contrast =  0.3
+            message.height= 0.3
+            message.draw() # draw on screen
+            mywin.flip()   # refresh to show what we have draw
+            #eegMarking()
+            return ans      
+        else: 
+            drawMaths(level)
+ 
+    if level == "HigherStress":
+        operant1 = random.randint(0,99)
+        operant2 = random.randint(0,99)
+        operant3 = random.randint(0,99)
+        operator1 = random.choice(operators_higher)
+        operator2 = random.choice(operators_higher)
+        #print(operant1,operator1,operant2, operator2,operant3)
+        try:
+            ans = eval(f'{operant1}{operator1}{operant2}{operator2}{operant3}')
+            if type(ans) == int and 0 <= ans <=9:
+                #print(ans)
+                message = visual.TextStim( mywin, text=f'{operant1} {operator1} {operant2} {operator2} {operant3}', languageStyle='LTR')
+                message.contrast =  0.3
+                message.height= 0.3
+                message.draw() # draw on screen
+                mywin.flip()   # refresh to show what we have draw
+                #eegMarking()
+                return ans  
+            else: 
+                drawMaths(level)
+        except ZeroDivisionError:
+            drawMaths(level)
+
+def drawAnswer(corr_ans, ans):
+    print(type(corr_ans),type(ans))
+    if ans.isdigit() and corr_ans == int(ans):
+        message_ = "Correct!"
+        print(message_)
+    elif ans.isdigit() and corr_ans != int(ans):
+        message_ = "Incorrect!"
+        print(message_)
+    else:
+        message_ = "An integer between 0-9 is required."
+    message = visual.TextStim( mywin, text=message_, languageStyle='LTR')
+    message.contrast =  0.3
+    message.height= 0.07
+    message.draw() # draw on screen
+    mywin.flip()   # refresh to show what we have draw      
 
 def drawTextOnScreen(massage) :
     message = visual.TextStim( mywin, text=massage, languageStyle='LTR')
@@ -115,13 +164,6 @@ def drawFixation(fileName, fixationTime):
                                 lineColor="white"
             )
     fixation.draw()
-#     if not(isTrianing) and fileName == 'trial break':
-#         text = f"Block {block+1} / {num_block}"
-#         message = visual.TextStim( mywin, text=text, languageStyle='LTR' )
-#         message.contrast =  0.3
-#         message.pos = (0, -0.6)
-#         message.draw() # draw on screen
-        
     mywin.flip()   # refresh to show what we have draw
     eegMarking(stampType =  "fixation" )
     core.wait(fixationTime)
@@ -140,7 +182,7 @@ def eegMarking(stampType, idx_mark=None, type_mark=None):   # use trial variable
     outlet.push_sample([markerString])
 
 
-trial_idx = input()
+#trial_idx = input()
 
 wait = 1
     
@@ -149,29 +191,9 @@ wait = 1
 mywin = visual.Window([1366, 768], color='black', fullscr=False, screen=0, units='norm')     # set the screen and full screen mode
 
 drawTextOnScreen('Loading...')
-
-#Load stimuli to RAM
-#rng = default_rng()
-#fname = rng.choice(5, size=3, replace=False)
-#fname = fname.astype(str).tolist()
-#usefilefname = fname
-#usefilefname.append('black')
-
-#all_imgs = []
-#for image_folder in image_folders:
-#    all_img = []
-#    for im in usefilefname:
-#        imgPath=image_folder+"/"+str(im)+".png"
-#        stim = visual.ImageStim( mywin,  image=imgPath )
-#    #     stim.size *= .7
-#        if im == 'black':
-#            blank = stim
-#        else:
-#            all_img.append(stim)
-#    all_imgs.append(all_img)
-
 core.wait(3)
-        
+drawTextOnScreen('For each question\nYou have 5s to answer\n')  
+core.wait(3)      
 ##############
 ####  Training session
 while True:
@@ -186,19 +208,27 @@ while True:
             drawTextOnScreen(f'Examples of {levels[i]}')
             core.wait(wait)
             for img in range(10):
-                drawStress(level)
-                #drawTextOnScreen(f'Trial {trial}/5')
-                core.wait(wait)
+                #Questions
+                corr_ans = drawMaths(level)
+                print(f"Correct answer: {corr_ans}")
+                core.wait(5)
                 clear_output(wait=True)
-                drawFixation('trial break', trial_flixation_time-wait)
+                #drawFixation('trial break', trial_flixation_time-wait)
                 
-                #Perception
-                #drawTrial(int(img)-1, 'perception', stim_time)   # drawTrail(idx_mark, type_mark, stimTime)
-                drawTextOnScreen(f'ANSWER')
-                core.wait(wait)
+                #Answer
+                drawTextOnScreen(f'Type in your answer')
+                core.wait(5)
+                answers = event.getKeys()
+                if len(answers) == 0:
+                    drawTextOnScreen(f'Too slow')
+                    core.wait(3)
+                else:
+                    drawTextOnScreen(f'Your answer was : {answers[0]}')
+                    core.wait(1)
+                    drawAnswer(corr_ans, answers[0])
+                    core.wait(3)
+
                 drawFixation('task break', np.random.uniform(task_flixation_time[0], task_flixation_time[1]))
-                #Imagery
-                #drawTrial(int(img)-1, 'imagery', stim_time)
 
         drawTextOnScreen('End of training session')
         core.wait(1)
