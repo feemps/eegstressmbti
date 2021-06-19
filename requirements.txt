@@ -1,0 +1,7 @@
+numpy
+pandas
+Pillow
+pylsl==1.12.2
+IProgress
+IPython
+psychopy
