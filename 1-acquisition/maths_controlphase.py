@@ -134,7 +134,7 @@ def drawTextOnScreen(massage) :
     mywin.flip()   # refresh to show what we have draw
 
     
-def drawFixation(fileName, fixationTime):
+def drawFixation(fixationTime):
     fixation = visual.ShapeStim(mywin,
                                 vertices=((0, -0.5), (0, 0.5), (0,0), (-0.5,0), (0.5, 0)),
                                 lineWidth=5,
@@ -185,8 +185,8 @@ while True:
                     avg_times[level].append(ans_time)
                     print(f"User's answer time: {ans_time}")
                 block_ += 1
-                drawFixation('task break', block_break)
-            drawFixation('task break', block_break)
+                drawFixation( block_break)
+            drawFixation(block_break)
         avg_low = statistics.mean(avg_times['LowStress']) * 0.9
         avg_mild = statistics.mean(avg_times['MildStress']) * 0.9
         avg_higher = statistics.mean(avg_times['HigherStress']) * 0.9
