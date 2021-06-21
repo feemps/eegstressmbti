@@ -205,8 +205,9 @@ while True:
                     eegMarking('maths', level, marking)
                 block_ += 1
                 drawFixation(block_break)
-            drawFixation(block_break)
-
+            #drawFixation(block_break)
+            drawTextOnScreen('Questionaire')
+            core.wait(60*3)
         drawTextOnScreen('End of Stress Session')
         core.wait(1)
         drawTextOnScreen('Press space bar to end')
