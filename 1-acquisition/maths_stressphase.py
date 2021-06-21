@@ -203,9 +203,9 @@ while True:
                         marking = drawAnswer(corr_ans, answers[0])
                         core.wait(1)
                     eegMarking('maths', level, marking)
-                    drawFixation(block_break)
                 block_ += 1
                 drawFixation(block_break)
+            drawFixation(block_break)
 
         drawTextOnScreen('End of Stress Session')
         core.wait(1)
