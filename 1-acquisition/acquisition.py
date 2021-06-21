@@ -40,7 +40,7 @@ print(f"Total experiment time = {'{:.2f}'.format(experiment_time/60)} Minute" )
 # Configuration 
 #==============================================
 levels = ['LowStress', 'MildStress', 'HigherStress']
-
+levels = ['LowStress']
 #name, type, channel_count, sampling rate, channel format, source_id
 #info = StreamInfo('CytonMarkers', 'Markers', 1, 0.0, 'int32', 'CytonMarkerID')#make an outlet
 info = pylsl.StreamInfo('CytonMarkers', 'Markers', 1, 0.0, 'string', 'CytonMarkerID')#make an outlet
@@ -64,21 +64,23 @@ def drawMaths(level):
         operant3 = random.randint(0,9)
         operator1 = random.choice(operators_low)
         operator2 = random.choice(operators_low)
-        print(operant1,operator1,operant2, operator2,operant3)
+        print(operant1, operator1, operant2, operator2, operant3)
         ans = eval(f'{operant1}{operator1}{operant2}{operator2}{operant3}')
-        if type(ans) == int and 0 <= ans <=9:
-            print(ans)
+        corr_ans = ans
+        if (type(corr_ans) == int) and (0 <= corr_ans) and (corr_ans <= 9):
+            corr_ans = int(corr_ans)
+            print("Type after if else:", type(corr_ans))
             message = visual.TextStim( mywin, text=f'{operant1} {operator1} {operant2} {operator2} {operant3}', languageStyle='LTR')
             message.contrast =  0.3
-            message.height= 0.3
+            message.height = 0.3
             message.draw() # draw on screen
             mywin.flip()   # refresh to show what we have draw
             #eegMarking()
-            return ans      
+            return corr_ans      
         else: 
-            drawMaths(level)
+            return drawMaths(level)
 
-    if level == "MildStress":
+    elif level == "MildStress":
         operant1 = random.randint(0,99)
         operant2 = random.randint(0,99)
         operant3 = random.randint(0,99)
@@ -87,39 +89,41 @@ def drawMaths(level):
         #print(operant1,operator1,operant2, operator2,operant3)
         ans = eval(f'{operant1}{operator1}{operant2}{operator2}{operant3}')
         if type(ans) == int and 0 <= ans <=9:
-            #print(ans)
+            corr_ans = ans
             message = visual.TextStim( mywin, text=f'{operant1} {operator1} {operant2} {operator2} {operant3}', languageStyle='LTR')
             message.contrast =  0.3
             message.height= 0.3
             message.draw() # draw on screen
             mywin.flip()   # refresh to show what we have draw
             #eegMarking()
-            return ans      
+            return corr_ans      
         else: 
-            drawMaths(level)
+            return drawMaths(level)
  
-    if level == "HigherStress":
+    else :
         operant1 = random.randint(0,99)
         operant2 = random.randint(0,99)
         operant3 = random.randint(0,99)
+        operant4 = random.randint(0,99)
         operator1 = random.choice(operators_higher)
         operator2 = random.choice(operators_higher)
-        #print(operant1,operator1,operant2, operator2,operant3)
+        operator3 = random.choice(operators_higher)
+        print(operant1,operator1,operant2, operator2,operant3,operator3,operant4)
         try:
-            ans = eval(f'{operant1}{operator1}{operant2}{operator2}{operant3}')
+            ans = eval(f'{operant1}{operator1}{operant2}{operator2}{operant3}{operator3}{operant4}')
             if type(ans) == int and 0 <= ans <=9:
-                #print(ans)
-                message = visual.TextStim( mywin, text=f'{operant1} {operator1} {operant2} {operator2} {operant3}', languageStyle='LTR')
+                corr_ans = ans
+                message = visual.TextStim( mywin, text=f'{operant1} {operator1} {operant2} {operator2} {operant3} {operator3} {operant4}', languageStyle='LTR')
                 message.contrast =  0.3
                 message.height= 0.3
                 message.draw() # draw on screen
                 mywin.flip()   # refresh to show what we have draw
                 #eegMarking()
-                return ans  
+                return corr_ans  
             else: 
-                drawMaths(level)
+                return drawMaths(level)
         except ZeroDivisionError:
-            drawMaths(level)
+            return drawMaths(level)
 
 def drawAnswer(corr_ans, ans):
     print(type(corr_ans),type(ans))
@@ -187,7 +191,7 @@ def eegMarking(stampType, idx_mark=None, type_mark=None):   # use trial variable
 wait = 1
 
 #5 mins
-timeout = 60*5
+timeout = 30
     
 # mywin = visual.Window([1366, 768], color='black', fullscr=True, screen=1, units='norm')     # set the screen and full screen mode
 # mywin = visual.Window([640, 360], color='black', fullscr=False, screen=0, units='norm')     # set the screen and full screen mode
@@ -208,11 +212,12 @@ while True:
             drawTextOnScreen(f'Examples of {levels[i]}')
             core.wait(wait)
             timeout_start = time.time()
-            #do for 5 mins
+            # do for 5 mins
             while time.time() < timeout_start + timeout:
                 #Questions
                 start_eachq = time.time()
                 corr_ans = drawMaths(level)
+                print("Type after return:", type(corr_ans))
                 print(f"Correct answer: {corr_ans}")
                 
                 #Answer
