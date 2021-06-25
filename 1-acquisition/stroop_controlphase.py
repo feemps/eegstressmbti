@@ -32,7 +32,6 @@ print(f"Total experiment time = {'{:.2f}'.format(experiment_time/60)} Minute" )
 # Configuration 
 #==============================================
 levels = ['LowStress', 'MildStress', 'HigherStress']
-levels = ['HigherStress']
 
 #name, type, channel_count, sampling rate, channel format, source_id
 #info = StreamInfo('CytonMarkers', 'Markers', 1, 0.0, 'int32', 'CytonMarkerID')#make an outlet
