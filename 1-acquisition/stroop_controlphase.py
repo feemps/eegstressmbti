@@ -11,7 +11,9 @@ from datetime import datetime
 from IPython.display import clear_output
 import random
 from numpy.random import default_rng
-import operator
+import statistics
+import csv
+import os.path
 
 #==============================================
 # experiment parameters
@@ -32,6 +34,8 @@ print(f"Total experiment time = {'{:.2f}'.format(experiment_time/60)} Minute" )
 # Configuration 
 #==============================================
 levels = ['LowStress', 'MildStress', 'HigherStress']
+levels = ['HigherStress']
+
 
 #name, type, channel_count, sampling rate, channel format, source_id
 #info = StreamInfo('CytonMarkers', 'Markers', 1, 0.0, 'int32', 'CytonMarkerID')#make an outlet
@@ -62,12 +66,11 @@ def get_choices(level,all_words,corr_ans,num):
     all_poss_ans = list(all_poss_ans)
 
     choices = []
-    choice1 = random.sample(all_poss_ans, num)
-    choice2 = random.sample(all_poss_ans, num)
-    choice3 = random.sample(all_poss_ans, num)
+    choice1 = random.sample(corr_ans, num)
+    choice2 = random.sample(all_words, num)
     choices.append(choice1)
     choices.append(choice2)
-    choices.append(choice3)
+    choices.append(all_words)
     choices.append(corr_ans)
 
     choices = random.sample(choices, len(choices))
@@ -291,10 +294,15 @@ while True:
                     #Answer
                     answers = event.waitKeys()
                     print(f"User's answer: {answers}")
+                    while ('1' not in answers) and ('2' not in answers) and ('3' not in answers) and ('4' not in answers):
+                        print("ans not 1-4")
+                        answers = event.waitKeys()
+
                     stop_eachq  = time.time()
                     ans_time = stop_eachq - start_eachq
                     avg_times[level].append(ans_time)
                     print(f"User's answer time: {ans_time}")
+
                 block_ += 1
                 drawFixation( block_break)
             drawFixation(block_break)

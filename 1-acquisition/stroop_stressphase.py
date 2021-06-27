@@ -10,6 +10,8 @@ from psychopy import visual, core, event
 from datetime import datetime
 from IPython.display import clear_output
 import random
+from numpy.random import default_rng
+import statistics
 import csv
 import os.path
 
@@ -69,12 +71,11 @@ def get_choices(level,all_words,corr_ans,num):
     all_poss_ans = list(all_poss_ans)
 
     choices = []
-    choice1 = random.sample(all_poss_ans, num)
-    choice2 = random.sample(all_poss_ans, num)
-    choice3 = random.sample(all_poss_ans, num)
+    choice1 = random.sample(corr_ans, num)
+    choice2 = random.sample(all_words, num)
     choices.append(choice1)
     choices.append(choice2)
-    choices.append(choice3)
+    choices.append(all_words)
     choices.append(corr_ans)
 
     choices = random.sample(choices, len(choices))

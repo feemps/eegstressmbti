@@ -180,6 +180,10 @@ while True:
                     #Answer
                     answers = event.waitKeys()
                     print(f"User's answer: {answers}")
+                    while ('1' not in answers) and ('2' not in answers) and ('3' not in answers) and ('4' not in answers):
+                        print("ans not 1-4")
+                        answers = event.waitKeys()
+
                     stop_eachq  = time.time()
                     ans_time = stop_eachq - start_eachq
                     avg_times[level].append(ans_time)
