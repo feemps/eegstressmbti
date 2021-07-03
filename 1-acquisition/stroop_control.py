@@ -16,17 +16,9 @@ import csv
 import os.path
 
 #==============================================
-# experiment parameters
+# Get experiment parameters
 #==============================================
-LowStress = input('LowStress time: ')
-MildStress = input('MildStress time: ')
-HigherStress = input('HigherStress time: ')
-
-avg_times = { 
-    'LowStress' : LowStress,
-    'MildStress' : MildStress,
-    'HigherStress' : HigherStress,
-}
+par = input('Participant : ')
 
 num_level           = 3 # Low, Mild, Higher
 num_block           = 4 # num block per level
@@ -37,16 +29,14 @@ block_break         = 20 # in seconds
 experiment_time = num_level * ((num_block * block_time) + (num_break * block_break))
 print(f"Total experiment time = {'{:.2f}'.format(experiment_time/60)} Minute" )
       
-
 #==============================================
 # Configuration 
 #==============================================
 levels = ['LowStress', 'MildStress', 'HigherStress']
 
-#name, type, channel_count, sampling rate, channel format, source_id
-#info = StreamInfo('CytonMarkers', 'Markers', 1, 0.0, 'int32', 'CytonMarkerID')#make an outlet
 info = pylsl.StreamInfo('CytonMarkers', 'Markers', 1, 0.0, 'string', 'CytonMarkerID')#make an outlet
 outlet = pylsl.StreamOutlet(info)
+# %whos
 
 color = {'Red   ':(255, 0, 0),
         'Green ':(0, 255, 0),
@@ -64,32 +54,36 @@ def get_corr_ans(color, search_code):
 
 def get_choices(level,all_words,corr_ans,num):
 
-    all_poss_ans = set()
-    all_poss_ans.update(all_words)
-    all_poss_ans.update(corr_ans)
-    
-    all_poss_ans = list(all_poss_ans)
+    if level == 'LowStress':
+        choices = []
+        choice1 = random.sample(all_words, num)
+        choice2 = random.sample(all_words, num)
+        choice3 = random.sample(all_words, num)
+        choices.append(choice1)
+        choices.append(choice2)
+        choices.append(choice3)
+        choices.append(all_words)
 
-    choices = []
-    choice1 = random.sample(corr_ans, num)
-    choice2 = random.sample(all_words, num)
-    choices.append(choice1)
-    choices.append(choice2)
-    choices.append(all_words)
-    choices.append(corr_ans)
+    else :
+        choices = []
+        choice1 = random.sample(corr_ans, num)
+        choice2 = random.sample(all_words, num)
+        choices.append(choice1)
+        choices.append(choice2)
+        choices.append(all_words)
+        choices.append(corr_ans)
 
     choices = random.sample(choices, len(choices))
     choice_check = [i for n, i in enumerate(choices) if i not in choices[:n]]
-    print(choice_check)
 
     idx_ans = choices.index(corr_ans)
 
     if len(choice_check) < 4:
-        print("yes=================================================================")
+        # print("yes=================================================================")
         return get_choices(level,all_words,corr_ans,num)
     else :
         return choices, idx_ans
-
+    
 def drawStroop(level):
     if level == "LowStress":
         idxs = np.random.choice(6, 3, replace=False)
@@ -122,7 +116,8 @@ def drawStroop(level):
                     grid_vert_justification='center')
         textbox.draw()
 
-        mywin.flip()   # refresh to show what we have draw
+        mywin.flip()
+        eegMarking('stroop', level, 'start')   # refresh to show what we have draw
         return idx_ans + 1
               
 
@@ -163,6 +158,7 @@ def drawStroop(level):
             textbox.draw()
 
             mywin.flip()   # refresh to show what we have draw
+            eegMarking('stroop', level, 'start')
             return idx_ans + 1
         else: 
             return drawStroop(level)
@@ -202,29 +198,32 @@ def drawStroop(level):
                     grid_vert_justification='center')
             textbox.draw()
             mywin.flip()   # refresh to show what we have draw
+            eegMarking('stroop', level, 'start')
             return idx_ans + 1
         else: 
             return drawStroop(level)
 
 def drawAnswer(corr_ans, ans):
-    print(type(corr_ans),type(ans))
-    if ans.isdigit() and corr_ans == int(ans):
-        message_ = "Correct!"
-        marking = "T"
-        print(message_)
-    elif ans.isdigit() and corr_ans != int(ans):
-        message_ = "Incorrect!"
-        marking = "F"
-        print(message_)
-    else:
-        message_ = "An integer between 1-4 is required."
+    if (ans!='1') and (ans!='2') and (ans!='3') and (ans!='4'): 
         marking = "O"
-    message = visual.TextStim( mywin, text=message_, languageStyle='LTR')
-    message.contrast =  0.3
-    message.height= 0.07
-    message.draw() # draw on screen
-    mywin.flip()   # refresh to show what we have draw  
-    return marking    
+        message_ = "An integer between 1-4 is required."
+        message = visual.TextStim( mywin, text=message_, languageStyle='LTR')
+        message.contrast =  0.3
+        message.height= 0.07
+        message.draw() # draw on screen
+        mywin.flip()   # refresh to show what we have draw
+        core.wait(0.5)
+
+    elif corr_ans == int(ans):
+        # message_ = "Correct!"
+        marking = "T"
+        # print(message_)
+    else:
+        # message_ = "Incorrect!"
+        marking = "F"
+        # print(message_)
+    eegMarking('stroop', level, marking)
+    return marking
 
 def drawTextOnScreen(massage) :
     message = visual.TextStim( mywin, text=massage, languageStyle='LTR')
@@ -245,64 +244,104 @@ def drawFixation(fixationTime):
     eegMarking(stampType =  "fixation" )
     core.wait(fixationTime)
     drawTextOnScreen('')
-
+     
 def eegMarking(stampType, level=None, marking=None):   # use trial variable from main
     markerString = str(stampType) + "," + str(level) + "," + str(marking)
-    markerString= str(markerString)                              
-    print("Marker string {}".format(markerString))
+    markerString = str(markerString)                              
+    print("Marker : {}".format(markerString))
     outlet.push_sample([markerString])
 
 mywin = visual.Window([1366, 768], color='black', fullscr=False, screen=0, units='norm')     # set the screen and full screen mode
 
 # drawTextOnScreen('Loading...')
 # core.wait(3)
+     
+###############################  Control Phase ##################################
+# to calculate avg time taken to answer for each stress level
 
-###############################  Stress Phase ##################################
-# to calculate ave time taken to answer for each stress level
+avg_times = {level: [] for level in levels}
 
 while True:
-    isTrianing = True
-    drawTextOnScreen('Stress session\nPlease wait\nPress space bar to start')
+    drawTextOnScreen('Control Session\nPlease wait\nPress space bar to start')
     keys = event.getKeys()
-    if 'space' in keys:      # If space has been pushed
+    if 'space' in keys: # If spacebar has been pressed
+        print("="*51)
+        print(f"======= PAR {par} | START STROOP CONTROL SESSION =======")
+        print("="*51)
         drawTextOnScreen('') 
-        for level in levels:
-            drawTextOnScreen(f'Stress Level: {level}')
+        for idx,level in enumerate(levels): # for each level
+            drawTextOnScreen(f'Level {idx+1}')
             core.wait(1)
             block_ = 0
-            while block_ < num_block:
-                drawTextOnScreen(f'Block {block_ + 1}')
+            while block_ < num_block: # 4 blocks
+                drawTextOnScreen(f'Block {block_ + 1}/4')
                 core.wait(1)
                 timeout_start = time.time()
-                while time.time() < timeout_start + block_time:
-                    #Questions
-                    #start_eachq = time.time()
-                    corr_ans = drawStroop(level)
-                    print(f"Correct answer: {corr_ans}")
+                while time.time() < timeout_start + block_time: # block_time = 50
+                    start_eachq = time.time()
+                    corr_ans = drawStroop(level) # Draw Stroop & make eegMarker and get the correct answer
 
-                    #Answer
-                    answers = event.waitKeys(maxWait = float(avg_times[level]))
-                    print(f"User's answer: {type(answers)}")
-                    if answers is None:
-                        message_ = 'Too slow!'
-                        marking = "S"
-                        drawTextOnScreen(message_)
-                        core.wait(1)
-                    else:
-                        marking = drawAnswer(corr_ans, answers[0])
-                        core.wait(1)
-                    eegMarking('stroop', level, marking)
+                    # # for draw stroop
+                    # try:
+                    #     os.makedirs('Stroop')
+                    # except:
+                    #     pass
+                    # filename = f"Stroop/par{par}_stroop_control_markers.csv"
+                    # mode = 'a' if os.path.exists(filename) else 'w'
+                    # with open(f"Stroop/par{par}_stroop_control_markers.csv", mode) as myfile:
+                    #     fileEmpty = os.stat(filename).st_size == 0
+                    #     headers = ['Time', 'Task', 'Level' , 'Marking']
+                    #     writer = csv.DictWriter(myfile, delimiter=',', lineterminator='\n', fieldnames=headers)
+                    #     if fileEmpty:
+                    #         writer.writeheader()  # file doesn't exist yet, write a header
+                    #     writer.writerow({'Time': time.time(), 'Task': 'stroop', 'Level': level, 'Marking': 'start'})
+
+                    answers = event.waitKeys() # wait until we get the answer
+                    marking = drawAnswer(corr_ans, answers[0]) # check the answer & make eegMarker
+                    # print(f"User's answer: {answers}")
+                    
+                    # time the answer and get the average answer time
+                    stop_eachq  = time.time()
+                    ans_time = stop_eachq - start_eachq
+                    avg_times[level].append(ans_time)
+                    print(f"Answer time: {ans_time}")
+                    print("="*10)
+
                 block_ += 1
-                drawFixation(block_break)
-            #drawFixation(block_break)
+                drawFixation(block_break) # block_break = 20 & eegMarking
+        
+            # time for questionaire at the end of the level
             drawTextOnScreen('Questionaire')
             core.wait(60*3)
-        drawTextOnScreen('End of Stress Session')
+            
+        avg_low = statistics.mean(avg_times['LowStress']) * 0.9
+        avg_mild = statistics.mean(avg_times['MildStress']) * 0.9
+        avg_higher = statistics.mean(avg_times['HigherStress']) * 0.9
+
+        # Save the average answering time for each level to csv
+        try:
+            os.makedirs('Stroop')
+        except:
+            pass
+        filename = f"Stroop/par{par}_stroop_time.csv"
+        mode = 'a' if os.path.exists(filename) else 'w'
+        with open(f"Stroop/par{par}_stroop_time.csv", mode) as myfile:
+            fileEmpty = os.stat(filename).st_size == 0
+            headers = ['Participant', 'LowStress' , 'MildStress', 'HigherStress']
+            writer = csv.DictWriter(myfile, delimiter=',', lineterminator='\n',fieldnames=headers)
+            if fileEmpty:
+                writer.writeheader()  # file doesn't exist yet, write a header
+            writer.writerow({'Participant': par, 'LowStress': avg_low, 'MildStress': avg_mild, 'HigherStress': avg_higher})
+        print("*** AVERAGE TIME SAVED ! *** ")
+
+        drawTextOnScreen('End of Control Session')
         core.wait(1)
         drawTextOnScreen('Press space bar to end')
         _ = event.waitKeys()
-        isTrianing = False
         break
 
 mywin.close()
 core.quit()
+print("="*51)
+print(f"======= PAR {par} | STROOP CONTROL SESSION ENDED =======")
+print("="*51)
