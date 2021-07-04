@@ -32,7 +32,8 @@ print(f"Total experiment time = {'{:.2f}'.format(experiment_time/60)} Minute" )
 #==============================================
 # Configuration 
 #==============================================
-levels = ['LowStress', 'MildStress', 'HigherStress']
+# levels = ['LowStress', 'MildStress', 'HigherStress']
+levels = [ 'HigherStress']
 
 info = pylsl.StreamInfo('CytonMarkers', 'Markers', 1, 0.0, 'string', 'CytonMarkerID')#make an outlet
 outlet = pylsl.StreamOutlet(info)
@@ -100,7 +101,7 @@ def drawMaths(level):
                 corr_ans = ans
                 message = visual.TextStim( mywin, text=f'{operant1} {operator1} {operant2} {operator2} {operant3} {operator3} {operant4}', languageStyle='LTR')
                 message.contrast =  0.3
-                message.height= 0.2
+                message.height= 0.19
                 message.draw() 
                 mywin.flip()
                 eegMarking('math', level, 'start')   
