@@ -215,9 +215,9 @@ while True:
             os.makedirs('Math')
         except:
             pass
-        filename = f"Math/par{par}_math_control_time.csv"
+        filename = f"Math/math_control_time.csv"
         mode = 'a' if os.path.exists(filename) else 'w'
-        with open(f"Math/par{par}_math_control_time.csv", mode) as myfile:
+        with open(f"Math/math_control_time.csv", mode) as myfile:
             fileEmpty = os.stat(filename).st_size == 0
             headers = ['Participant', 'LowStress' , 'MildStress', 'HigherStress']
             writer = csv.DictWriter(myfile, delimiter=',', lineterminator='\n',fieldnames=headers)

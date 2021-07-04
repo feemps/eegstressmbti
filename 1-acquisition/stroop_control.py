@@ -323,9 +323,9 @@ while True:
             os.makedirs('Stroop')
         except:
             pass
-        filename = f"Stroop/par{par}_stroop_time.csv"
+        filename = f"Stroop/stroop_control_time.csv"
         mode = 'a' if os.path.exists(filename) else 'w'
-        with open(f"Stroop/par{par}_stroop_time.csv", mode) as myfile:
+        with open(f"Stroop/stroop_control_time.csv", mode) as myfile:
             fileEmpty = os.stat(filename).st_size == 0
             headers = ['Participant', 'LowStress' , 'MildStress', 'HigherStress']
             writer = csv.DictWriter(myfile, delimiter=',', lineterminator='\n',fieldnames=headers)
