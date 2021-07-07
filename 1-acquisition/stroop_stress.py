@@ -32,8 +32,8 @@ avg_times = {
 num_level           = 3 # Low, Mild, Higher
 num_block           = 4 # num block per level
 num_break           = num_block - 1
-block_time          = 50 # in seconds
-block_break         = 20 # in seconds
+block_time          = 40 # in seconds
+block_break         = 10 # in seconds
 
 experiment_time = num_level * ((num_block * block_time) + (num_break * block_break))
 print(f"Total experiment time = {'{:.2f}'.format(experiment_time/60)} Minute" )
@@ -304,11 +304,11 @@ while True:
 
             # time for questionaire at the end of the level
             drawTextOnScreen('Questionnaire')
-            core.wait(60*3)
+            core.wait(60)
+            drawTextOnScreen('Please prepare for next level')
+            core.wait(1)
 
-        drawTextOnScreen('End of Stress Session')
-        core.wait(1)
-        drawTextOnScreen('Press ENTER to end')
+        drawTextOnScreen('End of Stress Session\nPress ENTER to end')
         _ = event.waitKeys()
         break
 

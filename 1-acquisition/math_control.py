@@ -23,8 +23,8 @@ par = input('Participant : ')
 num_level           = 3 # Low, Mild, Higher
 num_block           = 4 # num block per level
 num_break           = num_block - 1
-block_time          = 50 # in seconds
-block_break         = 20 # in seconds
+block_time          = 40 # in seconds
+block_break         = 10 # in seconds
 
 experiment_time = num_level * ((num_block * block_time) + (num_break * block_break))
 print(f"Total experiment time = {'{:.2f}'.format(experiment_time/60)} Minute" )
@@ -203,12 +203,20 @@ while True:
                 block_ += 1
                 drawFixation( block_break)
             
+            # time for questionaire at the end of the level
             if idx == 0: # at the end of the first level do both pairwise and the questionaire
                 drawTextOnScreen('Pairwise & Questionnaire')
-                core.wait(60*2.0)
+                core.wait(90)
+                drawTextOnScreen('Please prepare for next level')
+                core.wait(1)
+            elif idx == 2: # at the end of the first level do both pairwise and the questionaire
+                drawTextOnScreen('Questionnaire')
+                core.wait(60)
             else :
                 drawTextOnScreen('Questionnaire')
-                core.wait(60*1.5)
+                core.wait(60)
+                drawTextOnScreen('Please prepare for next level')
+                core.wait(1)
             
         avg_low = statistics.mean(avg_times['LowStress']) * 0.9
         avg_mild = statistics.mean(avg_times['MildStress']) * 0.9
@@ -230,9 +238,7 @@ while True:
             writer.writerow({'Participant': par, 'LowStress': avg_low, 'MildStress': avg_mild, 'HigherStress': avg_higher})
         print("*** AVERAGE TIME SAVED ! *** ")
 
-        drawTextOnScreen('End of Control Session')
-        core.wait(1)
-        drawTextOnScreen('Press ENTER to end')
+        drawTextOnScreen('End of Control Session\nPress ENTER to end')
         _ = event.waitKeys()
         break
 
