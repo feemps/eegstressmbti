@@ -216,7 +216,7 @@ while True:
                 drawTextOnScreen('Questionnaire')
                 core.wait(60)
                 drawTextOnScreen('Please prepare for next level')
-                core.wait(1)
+                core.wait(3)
             
         avg_low = statistics.mean(avg_times['LowStress']) * 0.9
         avg_mild = statistics.mean(avg_times['MildStress']) * 0.9

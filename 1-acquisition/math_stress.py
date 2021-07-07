@@ -212,8 +212,9 @@ while True:
             # time for questionaire at the end of the level
             drawTextOnScreen('Questionnaire')
             core.wait(60)
-            drawTextOnScreen('Please prepare for next level')
-            core.wait(1)
+            if idx != 2:
+                drawTextOnScreen('Please prepare for next level')
+                core.wait(3)
 
         drawTextOnScreen('End of Stress Session\nPress ENTER to end')
         _ = event.waitKeys()
