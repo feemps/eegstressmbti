@@ -32,8 +32,8 @@ print(f"Total experiment time = {'{:.2f}'.format(experiment_time/60)} Minute" )
 #==============================================
 # Configuration 
 #==============================================
-# levels = ['LowStress', 'MildStress', 'HigherStress']
-levels = [ 'HigherStress']
+levels = ['LowStress', 'MildStress', 'HigherStress']
+#levels = [ 'HigherStress']
 
 info = pylsl.StreamInfo('CytonMarkers', 'Markers', 1, 0.0, 'string', 'CytonMarkerID')#make an outlet
 outlet = pylsl.StreamOutlet(info)
@@ -160,7 +160,7 @@ def eegMarking(stampType, level=None, marking=None):   # use trial variable from
     print("Marker : {}".format(markerString))
     outlet.push_sample([markerString])
 
-mywin = visual.Window([1366, 768], color='black', fullscr=False, screen=0, units='norm')     # set the screen and full screen mode
+mywin = visual.Window([1920, 1080], color='black', fullscr=False, screen=0, units='norm')     # set the screen and full screen mode
 
 # drawTextOnScreen('Loading...')
 # core.wait(3)

@@ -15,7 +15,7 @@ participant_id = sys.argv[1]
 stimuli_type = sys.argv[2]
 
 # default_fname = ("data/data_%s.csv" % strftime("%Y-%m-%d-%H.%M.%S", gmtime()))
-default_fname = f"../eegstressmbti/1-acquisition/data/{participant_id}_{stimuli_type}_{strftime('%Y-%m-%d-%H.%M.%S', gmtime())}"
+default_fname = f"data/{participant_id}_{stimuli_type}_{strftime('%Y-%m-%d-%H.%M.%S', gmtime())}.csv"
 parser = OptionParser()
 parser.add_option("-d", "--duration",
                   dest="duration", type='int', default=10000,
@@ -99,7 +99,7 @@ if dejitter:
    lr.fit(X, y)
    timestamps = lr.predict(X)
 
-ch_names = ['Fp1', 'Fp2', 'F3', 'F4', 'F7', 'F8', 'O1', 'O2'] # UP TO YOUR CHOICE
+ch_names = ['Fp1', 'Fp2', 'F3', 'F4', 'F7', 'F8', 'Fz', 'O2'] # UP TO YOUR CHOICE
 print('Channels check:', ch_names)
 
 res = np.c_[timestamps, res]

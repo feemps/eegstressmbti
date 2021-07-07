@@ -165,7 +165,7 @@ def eegMarking(stampType, level=None, marking=None):   # use trial variable from
     print("Marker : {}".format(markerString))
     outlet.push_sample([markerString])
 
-mywin = visual.Window([1366, 768], color='black', fullscr=False, screen=0, units='norm')     # set the screen and full screen mode
+mywin = visual.Window([1920, 1080], color='black', fullscr=False, screen=0, units='norm')     # set the screen and full screen mode
 
 # drawTextOnScreen('Loading...')
 # core.wait(3)
