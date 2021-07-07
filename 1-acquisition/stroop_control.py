@@ -204,7 +204,8 @@ def drawStroop(level):
             return drawStroop(level)
 
 def drawAnswer(corr_ans, ans):
-    if (ans!='1') and (ans!='2') and (ans!='3') and (ans!='4'): 
+    print(ans[-1])
+    if (ans!='num_1') and (ans!='num_2') and (ans!='num_3') and (ans!='num_4'): 
         marking = "O"
         message_ = "An integer between 1-4 is required."
         message = visual.TextStim( mywin, text=message_, languageStyle='LTR')
@@ -214,7 +215,7 @@ def drawAnswer(corr_ans, ans):
         mywin.flip()   # refresh to show what we have draw
         core.wait(0.5)
 
-    elif corr_ans == int(ans):
+    elif corr_ans == int(ans[-1]):
         # message_ = "Correct!"
         marking = "T"
         # print(message_)
@@ -262,9 +263,9 @@ mywin = visual.Window([1920, 1080], color='black', fullscr=False, screen=0, unit
 avg_times = {level: [] for level in levels}
 
 while True:
-    drawTextOnScreen('Control Session\nPlease wait\nPress space bar to start')
+    drawTextOnScreen('Control Session\nPlease wait\nPress ENTER to start')
     keys = event.getKeys()
-    if 'space' in keys: # If spacebar has been pressed
+    if 'num_enter' in keys: # If spacebar has been pressed
         print("="*51)
         print(f"======= PAR {par} | START STROOP CONTROL SESSION =======")
         print("="*51)
@@ -298,7 +299,7 @@ while True:
 
                     answers = event.waitKeys() # wait until we get the answer
                     marking = drawAnswer(corr_ans, answers[0]) # check the answer & make eegMarker
-                    # print(f"User's answer: {answers}")
+                    print(f"User's answer: {answers}")
                     
                     # time the answer and get the average answer time
                     stop_eachq  = time.time()
@@ -311,8 +312,12 @@ while True:
                 drawFixation(block_break) # block_break = 20 & eegMarking
         
             # time for questionaire at the end of the level
-            drawTextOnScreen('Questionaire')
-            core.wait(60*3)
+            if idx == 0: # at the end of the first level do both pairwise and the questionaire
+                drawTextOnScreen('Pairwise & Questionnaire')
+                core.wait(60*2.0)
+            else :
+                drawTextOnScreen('Questionnaire')
+                core.wait(60*1.5)
             
         avg_low = statistics.mean(avg_times['LowStress']) * 0.9
         avg_mild = statistics.mean(avg_times['MildStress']) * 0.9
@@ -336,7 +341,7 @@ while True:
 
         drawTextOnScreen('End of Control Session')
         core.wait(1)
-        drawTextOnScreen('Press space bar to end')
+        drawTextOnScreen('Press ENTER to end')
         _ = event.waitKeys()
         break
 

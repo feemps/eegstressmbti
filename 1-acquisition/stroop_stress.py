@@ -212,11 +212,11 @@ def drawStroop(level):
             return drawStroop(level)
 
 def drawAnswer(corr_ans, ans):
-    if (ans!='1') and (ans!='2') and (ans!='3') and (ans!='4'): 
+    if (ans!='num_1') and (ans!='num_2') and (ans!='num_3') and (ans!='num_4'): 
         marking = "O"
         message_ = "An integer between 1-4 is required."
         # print(message_)
-    elif corr_ans == int(ans):
+    elif corr_ans == int(ans[-1]):
         message_ = "CORRECT!"
         marking = "T"
         # print(message_)
@@ -267,9 +267,9 @@ mywin = visual.Window([1920, 1080], color='black', fullscr=False, screen=0, unit
 # use the avg time from the control phase for time limit
 
 while True:
-    drawTextOnScreen('Stress session\nPlease wait\nPress space bar to start')
+    drawTextOnScreen('Stress session\nPlease wait\nPress ENTER to start')
     keys = event.getKeys()
-    if 'space' in keys:  # If spacebar has been pressed
+    if 'num_enter' in keys:  # If spacebar has been pressed
         print("="*51)
         print(f"======= PAR {par} | START STROOP STRESS SESSION =======")
         print("="*51)
@@ -303,12 +303,12 @@ while True:
                 drawFixation(block_break)
 
             # time for questionaire at the end of the level
-            drawTextOnScreen('Questionaire')
+            drawTextOnScreen('Questionnaire')
             core.wait(60*3)
 
         drawTextOnScreen('End of Stress Session')
         core.wait(1)
-        drawTextOnScreen('Press space bar to end')
+        drawTextOnScreen('Press ENTER to end')
         _ = event.waitKeys()
         break
 

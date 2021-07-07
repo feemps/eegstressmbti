@@ -119,11 +119,11 @@ def drawMaths(level):
             return drawMaths(level)
 
 def drawAnswer(corr_ans, ans):
-    if (ans!='1') and (ans!='2') and (ans!='3') and (ans!='4') and (ans!='5') and (ans!='6') and (ans!='7') and (ans!='8') and (ans!='9') and (ans!='0'): 
+    if (ans!='num_1') and (ans!='num_2') and (ans!='num_3') and (ans!='num_4') and (ans!='num_5') and (ans!='num_6') and (ans!='num_7') and (ans!='num_8') and (ans!='num_9') and (ans!='num_0'): 
         marking = "O"
         message_ = "An integer between 1-4 is required."
         # print(message_)
-    elif corr_ans == int(ans):
+    elif corr_ans == int(ans[-1]):
         message_ = "CORRECT!"
         marking = "T"
         # print(message_)
@@ -174,9 +174,9 @@ mywin = visual.Window([1920, 1080], color='black', fullscr=False, screen=0, unit
 # use the avg time from the control phase for time limit
 
 while True:
-    drawTextOnScreen('Stress session\nPlease wait\nPress space bar to start')
+    drawTextOnScreen('Stress session\nPlease wait\nPress ENTER to start')
     keys = event.getKeys()
-    if 'space' in keys:      # If space has been pushed
+    if 'num_enter' in keys:      # If space has been pushed
         print("="*51)
         print(f"====== PAR {par} | START MATH STRESS SESSION ======")
         print("="*51)
@@ -210,12 +210,12 @@ while True:
                 drawFixation(block_break)
 
             # time for questionaire at the end of the level
-            drawTextOnScreen('Questionaire')
-            core.wait(60*3)
+            drawTextOnScreen('Questionnaire')
+            core.wait(60*1.5)
 
         drawTextOnScreen('End of Stress Session')
         core.wait(1)
-        drawTextOnScreen('Press space bar to end')
+        drawTextOnScreen('Press ENTER to end')
         _ = event.waitKeys()
         break
 

@@ -112,7 +112,7 @@ def drawMaths(level):
             return drawMaths(level)
 
 def drawAnswer(corr_ans, ans):
-    if (ans!='1') and (ans!='2') and (ans!='3') and (ans!='4') and (ans!='5') and (ans!='6') and (ans!='7') and (ans!='8') and (ans!='9') and (ans!='0'): 
+    if (ans!='num_1') and (ans!='num_2') and (ans!='num_3') and (ans!='num_4') and (ans!='num_5') and (ans!='num_6') and (ans!='num_7') and (ans!='num_8') and (ans!='num_9') and (ans!='num_0'): 
         marking = "O"
         message_ = "An integer between 0-9 is required."
         message = visual.TextStim( mywin, text=message_, languageStyle='LTR')
@@ -122,7 +122,7 @@ def drawAnswer(corr_ans, ans):
         mywin.flip()   # refresh to show what we have draw
         core.wait(0.5)
 
-    elif corr_ans == int(ans):
+    elif corr_ans == int(ans[-1]):
         # message_ = "Correct!"
         marking = "T"
         # print(message_)
@@ -171,9 +171,9 @@ avg_times = {level: [] for level in levels}
 # print(avg_times)
 while True:
     isTrianing = True
-    drawTextOnScreen('Control Session\nPlease wait\nPress space bar to start')
+    drawTextOnScreen('Control Session\nPlease wait\nPress ENTER to start')
     keys = event.getKeys()
-    if 'space' in keys:      # If space has been pushed
+    if 'num_enter' in keys:      # If space has been pushed
         drawTextOnScreen('') 
         print("="*51)
         print(f"====== PAR {par} | START MATH CONTROL SESSION ======")
@@ -202,10 +202,13 @@ while True:
 
                 block_ += 1
                 drawFixation( block_break)
-
-            # time for questionaire at the end of the level
-            drawTextOnScreen('Questionaire')
-            core.wait(60*3)
+            
+            if idx == 0: # at the end of the first level do both pairwise and the questionaire
+                drawTextOnScreen('Pairwise & Questionnaire')
+                core.wait(60*2.0)
+            else :
+                drawTextOnScreen('Questionnaire')
+                core.wait(60*1.5)
             
         avg_low = statistics.mean(avg_times['LowStress']) * 0.9
         avg_mild = statistics.mean(avg_times['MildStress']) * 0.9
@@ -229,7 +232,7 @@ while True:
 
         drawTextOnScreen('End of Control Session')
         core.wait(1)
-        drawTextOnScreen('Press space bar to end')
+        drawTextOnScreen('Press ENTER to end')
         _ = event.waitKeys()
         break
 
