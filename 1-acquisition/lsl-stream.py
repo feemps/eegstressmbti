@@ -9,7 +9,7 @@ SCALE_FACTOR_AUX = 0.002 / (2**4)
 
 print("Creating LSL stream for EEG. \nName: OpenBCIEEG\nID: OpenBCItestEEG\n")
 
-info_eeg = StreamInfo('OpenBCIEEG', 'EEG', 8, 256, 'float32', 'OpenBCItestEEG')
+info_eeg = StreamInfo('OpenBCIEEG', 'EEG', 8, 250, 'float32', 'OpenBCItestEEG')
 
 print("Creating LSL stream for AUX. \nName: OpenBCIAUX\nID: OpenBCItestEEG\n")
 
