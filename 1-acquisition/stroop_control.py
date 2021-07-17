@@ -115,9 +115,8 @@ def drawStroop(level):
                     grid_horz_justification='left',
                     grid_vert_justification='center')
         textbox.draw()
-
-        mywin.flip()
-        eegMarking('stroop', level, 'start')   # refresh to show what we have draw
+        eegMarking('stroop', level, 'start')   
+        mywin.flip() # refresh to show what we have draw
         return idx_ans + 1
               
 
@@ -156,9 +155,8 @@ def drawStroop(level):
                     grid_horz_justification='left',
                     grid_vert_justification='center')
             textbox.draw()
-
-            mywin.flip()   # refresh to show what we have draw
             eegMarking('stroop', level, 'start')
+            mywin.flip()   # refresh to show what we have draw
             return idx_ans + 1
         else: 
             return drawStroop(level)
@@ -197,8 +195,8 @@ def drawStroop(level):
                     grid_horz_justification='left',
                     grid_vert_justification='center')
             textbox.draw()
-            mywin.flip()   # refresh to show what we have draw
             eegMarking('stroop', level, 'start')
+            mywin.flip()   # refresh to show what we have draw
             return idx_ans + 1
         else: 
             return drawStroop(level)
@@ -207,6 +205,7 @@ def drawAnswer(corr_ans, ans):
     print(ans[-1])
     if (ans!='num_1') and (ans!='num_2') and (ans!='num_3') and (ans!='num_4'): 
         marking = "O"
+        eegMarking('stroop', level, marking)
         message_ = "An integer between 1-4 is required."
         message = visual.TextStim( mywin, text=message_, languageStyle='LTR')
         message.contrast =  0.3
@@ -218,12 +217,13 @@ def drawAnswer(corr_ans, ans):
     elif corr_ans == int(ans[-1]):
         # message_ = "Correct!"
         marking = "T"
+        eegMarking('stroop', level, marking)
         # print(message_)
     else:
         # message_ = "Incorrect!"
         marking = "F"
+        eegMarking('stroop', level, marking)
         # print(message_)
-    eegMarking('stroop', level, marking)
     return marking
 
 def drawTextOnScreen(massage) :
@@ -241,8 +241,8 @@ def drawFixation(fixationTime):
                                 lineColor="white"
             )
     fixation.draw()
-    mywin.flip()   # refresh to show what we have draw
     eegMarking(stampType =  "fixation" )
+    mywin.flip()   # refresh to show what we have draw
     core.wait(fixationTime)
     drawTextOnScreen('')
      

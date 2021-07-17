@@ -67,8 +67,8 @@ def drawMaths(level):
             message.contrast =  0.3
             message.height = 0.2
             message.draw() # draw on screen
-            mywin.flip()   # refresh to show what we have draw
             eegMarking('math', level, 'start')
+            mywin.flip()   # refresh to show what we have draw
             return corr_ans      
         else: 
             return drawMaths(level)
@@ -87,8 +87,8 @@ def drawMaths(level):
             message.contrast =  0.3
             message.height= 0.2
             message.draw() # draw on screen
-            mywin.flip()   # refresh to show what we have draw
             eegMarking('math', level, 'start')
+            mywin.flip()   # refresh to show what we have draw
             return corr_ans      
         else: 
             return drawMaths(level)
@@ -110,8 +110,8 @@ def drawMaths(level):
                 message.contrast =  0.3
                 message.height= 0.2
                 message.draw() # draw on screen
-                mywin.flip()   # refresh to show what we have draw
                 eegMarking('math', level, 'start')
+                mywin.flip()   # refresh to show what we have draw
                 return corr_ans  
             else: 
                 return drawMaths(level)
@@ -121,17 +121,19 @@ def drawMaths(level):
 def drawAnswer(corr_ans, ans):
     if (ans!='num_1') and (ans!='num_2') and (ans!='num_3') and (ans!='num_4') and (ans!='num_5') and (ans!='num_6') and (ans!='num_7') and (ans!='num_8') and (ans!='num_9') and (ans!='num_0'): 
         marking = "O"
+        eegMarking('math', level, marking)
         message_ = "An integer between 1-4 is required."
         # print(message_)
     elif corr_ans == int(ans[-1]):
         message_ = "CORRECT!"
         marking = "T"
+        eegMarking('math', level, marking)
         # print(message_)
     else:
         message_ = "INCORRECT!"
         marking = "F"
+        eegMarking('math', level, marking)
         # print(message_)
-    eegMarking('math', level, marking)
     message = visual.TextStim( mywin, text=message_, languageStyle='LTR')
     message.contrast =  0.3
     message.height= 0.07
@@ -154,8 +156,8 @@ def drawFixation(fixationTime):
                                 lineColor="white"
             )
     fixation.draw()
-    mywin.flip()   # refresh to show what we have draw
     eegMarking(stampType =  "fixation" )
+    mywin.flip()   # refresh to show what we have draw
     core.wait(fixationTime)
     drawTextOnScreen('')
      
